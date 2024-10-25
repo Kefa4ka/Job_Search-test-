@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Професійний пошук роботи - Ваш шлях до кар'єрного успіху</title>
+    <meta name="description" content="Знайдіть роботу своєї мрії на нашій платформі з тисячами вакансій, кар'єрними порадами та інструментами для професійного розвитку.">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav class="main-nav">
+                <div class="logo">
+                    <a href="#"><img src="logo.png" alt="Логотип Професійний пошук роботи" width="150" height="50"></a>
+                </div>
+                <ul class="nav-links">
+                    <li><a href="#" onclick="showAllJobs()">Всі вакансії</a></li>
+                    <li><a href="#" onclick="showFeaturedJobs()">Рекомендовані вакансії</a></li>
+                    <li><a href="#" onclick="showSavedJobs()">Збережені вакансії</a></li>
+                    <li><a href="#" onclick="openCareerResourcesModal()">Кар'єрні ресурси</a></li>
+                    <li><a href="#" onclick="openCompanyDirectoryModal()">Каталог компаній</a></li>
+                    <li><a href="#" onclick="openSalaryCalculatorModal()">Калькулятор зарплат</a></li>
+                </ul>
+                <div class="user-actions">
+                    <a href="#" id="loginRegisterBtn" class="btn">Увійти / Зареєструватися</a>
+                    <a href="#" id="userProfileBtn" class="btn" style="display: none;">Мій профіль</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Знайдіть роботу своєї мрії</h1>
+                <p>Тисячі можливостей чекають на вас. Почніть свій шлях до успішної кар'єри сьогодні!</p>
+                <a href="#job-search" class="btn btn-primary">Почати пошук</a>
+            </div>
+        </section>
+
+        <section id="job-search" class="job-search">
+            <div class="container">
+                <h2>Пошук вакансій</h2>
+                <form class="search-form" onsubmit="event.preventDefault(); searchJobs();">
+                    <div class="form-group">
+                        <label for="searchInput">Ключові слова або посада</label>
+                        <input type="text" id="searchInput" placeholder="Наприклад: Розробник, Менеджер, Дизайнер">
+                    </div>
+                    <div class="form-group">
+                        <label for="locationFilter">Місто</label>
+                        <select id="locationFilter">
+                            <option value="">Всі міста</option>
+                            <!-- Options will be dynamically populated -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="jobTypeFilter">Тип роботи</label>
+                        <select id="jobTypeFilter">
+                            <option value="">Всі типи</option>
+                            <option value="Повний день">Повний день</option>
+                            <option value="Неповний день">Неповний день</option>
+                            <option value="Віддалено">Віддалено</option>
+                            <option value="Контракт">Контракт</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="salaryFilter">Зарплата</label>
+                        <select id="salaryFilter">
+                            <option value="">Всі зарплати</option>
+                            <option value="0-30000">До 30,000 грн</option>
+                            <option value="30000-50000">30,000 - 50,000 грн</option>
+                            <option value="50000-80000">50,000 - 80,000 грн</option>
+                            <option value="80000-120000">80,000 - 120,000 грн</option>
+                            <option value="120000+">Більше 120,000 грн</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="experienceFilter">Досвід роботи</label>
+                        <select id="experienceFilter">
+                            <option value="">Будь-який досвід</option>
+                            <option value="0-1">0-1 рік</option>
+                            <option value="1-3">1-3 роки</option>
+                            <option value="3-5">3-5 років</option>
+                            <option value="5+">5+ років</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="industryFilter">Галузь</label>
+                        <select id="industryFilter">
+                            <option value="">Всі галузі</option>
+                            <!-- Options will be dynamically populated -->
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Пошук</button>
+                </form>
+            </div>
+        </section>
+
+        <section class="job-listings">
+            <div class="container">
+                <h2>Знайдені вакансії</h2>
+                <div class="job-filters">
+                    <button onclick="sortJobs('date')" class="btn btn-secondary">Сортувати за датою</button>
+                    <button onclick="sortJobs('salary')" class="btn btn-secondary">Сортувати за зарплатою</button>
+                    <button onclick="toggleJobView('list')" class="btn btn-secondary"><i class="fas fa-list"></i></button>
+                    <button onclick="toggleJobView('grid')" class="btn btn-secondary"><i class="fas fa-th"></i></button>
+                </div>
+                <div id="jobList" class="job-list">
+                    <!-- Job listings will be dynamically inserted here -->
+                </div>
+                <div class="pagination">
+                    <button id="prevPage" onclick="changePage(-1)" disabled>Попередня</button>
+                    <span id="currentPage">Сторінка 1</span>
+                    <button id="nextPage" onclick="changePage(1)">Наступна</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="featured-companies">
+            <div class="container">
+                <h2>Популярні компанії</h2>
+                <div class="company-slider">
+                    <!-- Company logos will be dynamically inserted here -->
+                </div>
+            </div>
+        </section>
+
+        <section class="job-categories">
+            <div class="container">
+                <h2>Популярні категорії вакансій</h2>
+                <div class="category-grid">
+                    <!-- Job categories will be dynamically inserted here -->
+                </div>
+            </div>
+        </section>
+
+        <section class="career-advice">
+            <div class="container">
+                <h2>Кар'єрні поради</h2>
+                <div class="advice-grid">
+                    <article class="advice-card">
+                        <img src="resume-tips.jpg" alt="Поради щодо резюме" width="300" height="200">
+                        <h3>10 порад для створення ідеального резюме</h3>
+                        <p>Дізнайтеся, як створити резюме, яке приверне увагу роботодавців та допоможе вам отримати бажану роботу.</p>
+                        <a href="#" class="btn btn-secondary">Читати далі</a>
+                    </article>
+                    <article class="advice-card">
+                        <img src="interview-prep.jpg" alt="Підготовка до співбесіди" width="300" height="200">
+                        <h3>Як підготуватися до співбесіди: покрокове керівництво</h3>
+                        <p>Ефективні стратегії та поради для успішного проходження співбесіди та отримання роботи вашої мрії.</p>
+                        <a href="#" class="btn btn-secondary">Читати далі</a>
+                    </article>
+                    <article class="advice-card">
+                        <img src="career-change.jpg" alt="Зміна кар'єри" width="300" height="200">
+                        <h3>5 кроків до успішної зміни кар'єри</h3>
+                        <p>Плануєте змінити професію? Дізнайтеся, як зробити це ефективно та мінімізувати ризики.</p>
+                        <a href="#" class="btn btn-secondary">Читати далі</a>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="testimonials">
+            <div class="container">
+                <h2>Історії успіху</h2>
+                <div class="testimonial-slider">
+                    <div class="testimonial">
+                        <img src="user1.jpg" alt="Фото користувача" width="100" height="100">
+                        <blockquote>
+                            "Завдяки цьому сайту я знайшла роботу своєї мрії всього за два тижні! Інтуїтивний інтерфейс та велика кількість вакансій зробили пошук роботи легким та приємним."
+                        </blockquote>
+                        <cite>- Марія К., Web-дизайнер</cite>
+                    </div>
+                    <div class="testimonial">
+                        <img src="user2.jpg" alt="Фото користувача" width="100" height="100">
+                        <blockquote>
+                            "Я зміг знайти чудову роботу в ІТ-сфері, незважаючи на те, що тільки починав свою кар'єру. Ресурси та поради на сайті допомогли мені підготуватися до співбесід та виділитися серед інших кандидатів."
+                        </blockquote>
+                        <cite>- Олександр П., Junior Developer</cite>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="newsletter">
+            <div class="container">
+                <h2>Підпишіться на нашу розсилку</h2>
+                <p>Отримуйте найновіші вакансії та кар'єрні поради прямо на вашу електронну пошту</p>
+                <form id="newsletterForm" onsubmit="event.preventDefault(); subscribeNewsletter();">
+                    <input type="email" id="newsletterEmail" placeholder="Ваш email" required>
+                    <button type="submit" class="btn btn-primary">Підписатися</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Про нас</h3>
+                    <p>Ми допомагаємо з'єднати талановитих професіоналів з найкращими роботодавцями України.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Швидкі посилання</h3>
+                    <ul>
+                        <li><a href="#">Про компанію</a></li>
+                        <li><a href="#">Контакти</a></li>
+                        <li><a href="#">Умови використання</a></li>
+                        <li><a href="#">Політика конфіденційності</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Для роботодавців</h3>
+                    <ul>
+                        <li><a href="#">Розмістити вакансію</a></li>
+                        <li><a href="#">Пошук резюме</a></li>
+                        <li><a href="#">Рекрутингові послуги</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Слідкуйте за нами</h3>
+                    <div class="social-icons">
+                        <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Професійний пошук роботи. Всі права захищені.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modals -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Увійти</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Пароль</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <button  type="submit" class="btn btn-primary">Увійти</button>
+            </form>
+            <p>Немає облікового запису? <a href="#" id="showRegisterForm">Зареєструватися</a></p>
+            <p><a href="#" onclick="openForgotPasswordModal()">Забули пароль?</a></p>
+        </div>
+    </div>
+
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Зареєструватися</h2>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="registerName">Повне ім'я</label>
+                    <input type="text" id="registerName" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerEmail">Email</label>
+                    <input type="email" id="registerEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword">Пароль</label>
+                    <input type="password" id="registerPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Підтвердіть пароль</label>
+                    <input type="password" id="confirmPassword" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Зареєструватися</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="forgotPasswordModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Відновлення паролю</h2>
+            <form id="forgotPasswordForm">
+                <div class="form-group">
+                    <label for="forgotPasswordEmail">Email</label>
+                    <input type="email" id="forgotPasswordEmail" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Відновити пароль</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="userProfileModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Профіль користувача</h2>
+            <form id="userProfileForm">
+                <div class="form-group">
+                    <label for="profileName">Ім'я</label>
+                    <input type="text" id="profileName" required>
+                </div>
+                <div class="form-group">
+                    <label for="profileEmail">Email</label>
+                    <input type="email" id="profileEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="profilePhone">Телефон</label>
+                    <input type="tel" id="profilePhone">
+                </div>
+                <div class="form-group">
+                    <label for="profileLocation">Місто</label>
+                    <input type="text" id="profileLocation">
+                </div>
+                <div class="form-group">
+                    <label for="profileBio">Про себе</label>
+                    <textarea id="profileBio" rows="4"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="profileResume">Резюме (PDF)</label>
+                    <input type="file" id="profileResume" accept=".pdf">
+                </div>
+                <button type="submit" class="btn btn-primary">Зберегти зміни</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="jobDetailsModal" class="modal">
+        <div class="modal-content job-details">
+            <span class="close">&times;</span>
+            <h2 id="jobTitle"></h2>
+            <p id="jobCompany" class="company"></p>
+            <p id="jobLocation" class="location"></p>
+            <p id="jobType" class="job-type"></p>
+            <p id="jobSalary" class="salary"></p>
+            <div id="jobDescription"></div>
+            <h3>Вимоги:</h3>
+            <ul id="jobRequirements"></ul>
+            <h3>Обов'язки:</h3>
+            <ul id="jobResponsibilities"></ul>
+            <h3>Переваги:</h3>
+            <ul id="jobBenefits"></ul>
+            <button id="applyJobBtn" class="btn btn-primary">Подати заявку</button>
+        </div>
+    </div>
+
+    <div id="applyJobModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Подати заявку на вакансію</h2>
+            <form id="jobApplicationForm">
+                <div class="form-group">
+                    <label for="applicationName">Повне ім'я</label>
+                    <input type="text" id="applicationName" required>
+                </div>
+                <div class="form-group">
+                    <label for="applicationEmail">Email</label>
+                    <input type="email" id="applicationEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="applicationPhone">Телефон</label>
+                    <input type="tel" id="applicationPhone" required>
+                </div>
+                <div class="form-group">
+                    <label for="applicationResume">Резюме (PDF)</label>
+                    <input type="file" id="applicationResume" accept=".pdf" required>
+                </div>
+                <div class="form-group">
+                    <label for="applicationCoverLetter">Супровідний лист</label>
+                    <textarea id="applicationCoverLetter" rows="4" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Відправити заявку</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="careerResourcesModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Кар'єрні ресурси</h2>
+            <div class="resource-categories">
+                <div class="resource-category">
+                    <h3>Створення резюме</h3>
+                    <ul>
+                        <li><a href="#">Шаблони резюме</a></li>
+                        <li><a href="#">Поради щодо написання резюме</a></li>
+                        <li><a href="#">Приклади успішних резюме</a></li>
+                    </ul>
+                </div>
+                <div class="resource-category">
+                    <h3>Підготовка до співбесіди</h3>
+                    <ul>
+                        <li><a href="#">Типові питання на співбесіді</a></li>
+                        <li><a href="#">Як відповідати на складні питання</a></li>
+                        <li><a href="#">Поради щодо дрес-коду</a></li>
+                    </ul>
+                </div>
+                <div class="resource-category">
+                    <h3>Розвиток кар'єри</h3>
+                    <ul>
+                        <li><a href="#">Курси підвищення кваліфікації</a></li>
+                        <li><a href="#">Networking: як будувати професійні зв'язки</a></li>
+                        <li><a href="#">Планування кар'єрного росту</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="companyDirectoryModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Каталог компаній</h2>
+            <div class="company-search">
+                <input type="text" id="companySearchInput" placeholder="Пошук компанії">
+                <button onclick="searchCompanies()" class="btn btn-secondary">Пошук</button>
+            </div>
+            <div id="companyList" class="company-list">
+                <!-- Company listings will be dynamically inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <div id="salaryCalculatorModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Калькулятор зарплат</h2>
+            <form id="salaryCalculatorForm">
+                <div class="form-group">
+                    <label for="jobTitle">Посада</label>
+                    <input type="text" id="jobTitle" required>
+                </div>
+                <div class="form-group">
+                    <label for="location">Місто</label>
+                    <input type="text" id="location" required>
+                </div>
+                <div class="form-group">
+                    <label for="experience">Досвід роботи (роки)</label>
+                    <input type="number" id="experience" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label for="education">Освіта</label>
+                    <select id="education" required>
+                        <option value="">Оберіть рівень освіти</option>
+                        <option value="high_school">Середня освіта</option>
+                        <option value="bachelor">Бакалавр</option>
+                        <option value="master">Магістр</option>
+                        <option value="phd">Доктор філософії</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Розрахувати</button>
+            </form>
+            <div id="salaryResult" class="salary-result" style="display: none;">
+                <h3>Орієнтовна зарплата:</h3>
+                <p id="estimatedSalary"></p>
+                <p>Діапазон зарплат: <span id="salaryRange"></span></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
