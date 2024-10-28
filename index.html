@@ -15,13 +15,19 @@
                 <div class="logo">
                     <a href="#"><img src="logo.png" alt="Логотип Професійний пошук роботи" width="150" height="50"></a>
                 </div>
-                <ul class="nav-links">
+                <button id="menuToggle" class="menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <ul class="nav-links" id="navLinks">
                     <li><a href="#" onclick="showAllJobs()">Всі вакансії</a></li>
                     <li><a href="#" onclick="showFeaturedJobs()">Рекомендовані вакансії</a></li>
                     <li><a href="#" onclick="showSavedJobs()">Збережені вакансії</a></li>
                     <li><a href="#" onclick="openCareerResourcesModal()">Кар'єрні ресурси</a></li>
                     <li><a href="#" onclick="openCompanyDirectoryModal()">Каталог компаній</a></li>
                     <li><a href="#" onclick="openSalaryCalculatorModal()">Калькулятор зарплат</a></li>
+                    <li><a href="#" onclick="openResumeBuilderModal()">Конструктор резюме</a></li>
+                    <li><a href="#" onclick="openSkillAssessmentModal()">Оцінка навичок</a></li>
+                    <li><a href="#" onclick="openJobAlertModal()">Сповіщення про вакансії</a></li>
                 </ul>
                 <div class="user-actions">
                     <a href="#" id="loginRegisterBtn" class="btn">Увійти / Зареєструватися</a>
@@ -43,7 +49,7 @@
         <section id="job-search" class="job-search">
             <div class="container">
                 <h2>Пошук вакансій</h2>
-                <form class="search-form" onsubmit="event.preventDefault(); searchJobs();">
+                <form class="search-form" id="jobSearchForm">
                     <div class="form-group">
                         <label for="searchInput">Ключові слова або посада</label>
                         <input type="text" id="searchInput" placeholder="Наприклад: Розробник, Менеджер, Дизайнер">
@@ -52,7 +58,6 @@
                         <label for="locationFilter">Місто</label>
                         <select id="locationFilter">
                             <option value="">Всі міста</option>
-                            <!-- Options will be dynamically populated -->
                         </select>
                     </div>
                     <div class="form-group">
@@ -90,7 +95,6 @@
                         <label for="industryFilter">Галузь</label>
                         <select id="industryFilter">
                             <option value="">Всі галузі</option>
-                            <!-- Options will be dynamically populated -->
                         </select>
                     </div>
                     <button type="submit" class="btn btn-primary">Пошук</button>
@@ -121,7 +125,7 @@
         <section class="featured-companies">
             <div class="container">
                 <h2>Популярні компанії</h2>
-                <div class="company-slider">
+                <div class="company-slider" id="companySlider">
                     <!-- Company logos will be dynamically inserted here -->
                 </div>
             </div>
@@ -130,7 +134,7 @@
         <section class="job-categories">
             <div class="container">
                 <h2>Популярні категорії вакансій</h2>
-                <div class="category-grid">
+                <div class="category-grid" id="categoryGrid">
                     <!-- Job categories will be dynamically inserted here -->
                 </div>
             </div>
@@ -165,21 +169,8 @@
         <section class="testimonials">
             <div class="container">
                 <h2>Історії успіху</h2>
-                <div class="testimonial-slider">
-                    <div class="testimonial">
-                        <img src="user1.jpg" alt="Фото користувача" width="100" height="100">
-                        <blockquote>
-                            "Завдяки цьому сайту я знайшла роботу своєї мрії всього за два тижні! Інтуїтивний інтерфейс та велика кількість вакансій зробили пошук роботи легким та приємним."
-                        </blockquote>
-                        <cite>- Марія К., Web-дизайнер</cite>
-                    </div>
-                    <div class="testimonial">
-                        <img src="user2.jpg" alt="Фото користувача" width="100" height="100">
-                        <blockquote>
-                            "Я зміг знайти чудову роботу в ІТ-сфері, незважаючи на те, що тільки починав свою кар'єру. Ресурси та поради на сайті допомогли мені підготуватися до співбесід та виділитися серед інших кандидатів."
-                        </blockquote>
-                        <cite>- Олександр П., Junior Developer</cite>
-                    </div>
+                <div class="testimonial-slider" id="testimonialSlider">
+                    <!-- Testimonials will be dynamically inserted here -->
                 </div>
             </div>
         </section>
@@ -188,10 +179,21 @@
             <div class="container">
                 <h2>Підпишіться на нашу розсилку</h2>
                 <p>Отримуйте найновіші вакансії та кар'єрні поради прямо на вашу електронну пошту</p>
-                <form id="newsletterForm" onsubmit="event.preventDefault(); subscribeNewsletter();">
+                <form id="newsletterForm">
                     <input type="email" id="newsletterEmail" placeholder="Ваш email" required>
                     <button type="submit" class="btn btn-primary">Підписатися</button>
                 </form>
+            </div>
+        </section>
+
+        <section class="app-download">
+            <div class="container">
+                <h2>Завантажте наш мобільний додаток</h2>
+                <p>Шукайте роботу в будь-якому місці та в будь-який час</p>
+                <div class="app-buttons">
+                    <a href="#" class="btn btn-app"><i class="fab fa-apple"></i> App Store</a>
+                    <a href="#" class="btn btn-app"><i class="fab fa-google-play"></i> Google Play</a>
+                </div>
             </div>
         </section>
     </main>
@@ -250,7 +252,7 @@
                     <label for="loginPassword">Пароль</label>
                     <input type="password" id="loginPassword" required>
                 </div>
-                <button  type="submit" class="btn btn-primary">Увійти</button>
+                <button type="submit" class="btn btn-primary">Увійти</button>
             </form>
             <p>Немає облікового запису? <a href="#" id="showRegisterForm">Зареєструватися</a></p>
             <p><a href="#" onclick="openForgotPasswordModal()">Забули пароль?</a></p>
@@ -261,6 +263,7 @@
         <div class="modal-content">
             <span class="close">&times;</span>
             <h2>Зареєструватися</h2>
+            
             <form id="registerForm">
                 <div class="form-group">
                     <label for="registerName">Повне ім'я</label>
@@ -347,6 +350,7 @@
             <h3>Переваги:</h3>
             <ul id="jobBenefits"></ul>
             <button id="applyJobBtn" class="btn btn-primary">Подати заявку</button>
+            <button id="saveJobBtn" class="btn btn-secondary">Зберегти вакансію</button>
         </div>
     </div>
 
@@ -461,6 +465,99 @@
                 <p id="estimatedSalary"></p>
                 <p>Діапазон зарплат: <span id="salaryRange"></span></p>
             </div>
+        </div>
+    </div>
+
+    <div id="resumeBuilderModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Конструктор резюме</h2>
+            <form id="resumeBuilderForm">
+                <div class="form-group">
+                    <label for="resumeName">Повне ім'я</label>
+                    <input type="text" id="resumeName" required>
+                </div>
+                <div class="form-group">
+                    <label for="resumeEmail">Email</label>
+                    <input type="email" id="resumeEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="resumePhone">Телефон</label>
+                    <input type="tel" id="resumePhone" required>
+                </div>
+                <div class="form-group">
+                    <label for="resumeSummary">Короткий опис</label>
+                    <textarea id="resumeSummary" rows="4" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="resumeExperience">Досвід роботи</label>
+                    <textarea id="resumeExperience" rows="6" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="resumeEducation">Освіта</label>
+                    <textarea id="resumeEducation" rows="4" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="resumeSkills">Навички</label>
+                    <input type="text" id="resumeSkills" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Створити резюме</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="skillAssessmentModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Оцінка навичок</h2>
+            <p>Пройдіть тест, щоб оцінити свої професійні навички:</p>
+            <form id="skillAssessmentForm">
+                <div id="questionContainer">
+                    <!-- Questions will be dynamically inserted here -->
+                </div>
+                <button type="submit" class="btn btn-primary">Завершити тест</button>
+            </form>
+            <div id="assessmentResult" style="display: none;">
+                <h3>Результати оцінки:</h3>
+                <p id="skillScore"></p>
+                <p id="skillFeedback"></p>
+            </div>
+        </div>
+    </div>
+
+    <div id="jobAlertModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Налаштування сповіщень про вакансії</h2>
+            <form id="jobAlertForm">
+                <div class="form-group">
+                    <label for="alertKeywords">Ключові слова</label>
+                    <input type="text" id="alertKeywords" required>
+                </div>
+                <div class="form-group">
+                    <label for="alertLocation">Місто</label>
+                    <input type="text" id="alertLocation">
+                </div>
+                <div class="form-group">
+                    <label for="alertJobType">Тип роботи</label>
+                    <select id="alertJobType">
+                        <option value="">Всі типи</option>
+                        <option value="Повний день">Повний день</option>
+                        <option value="Неповний день">Неповний день</option>
+                        <option value="Віддалено">Віддалено</option>
+                        <option value="Контракт">Контракт</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="alertFrequency">Частота сповіщень</label>
+                    <select id="alertFrequency" required>
+                        <option value="daily">Щодня</option>
+                        <option value="weekly">Щотижня</option>
+                        <option value="biweekly">Раз на два тижні</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Зберегти налаштування</button>
+            </form>
         </div>
     </div>
 

@@ -132,7 +132,7 @@ function displayJobs(jobsToShow) {
             <p class="experience">Досвід: ${job.experience}</p>
             <p>Дата публікації: ${job.datePosted.toLocaleDateString()}</p>
             <button onclick="showJobDetails(${job.id})" class="btn btn-secondary">Детальніше</button>
-            ${job.featured ? '<span class="featured-tag">Рекомендовано</span>'  : ''}
+            ${job.featured ? '<span class="featured-tag">Рекомендовано</span>' : ''}
         `;
         jobList.appendChild(jobElement);
     });
@@ -182,7 +182,7 @@ function matchSalaryFilter(jobSalary, filter) {
     if (filter === '') return true;
     const [min, max] = jobSalary.split(' - ')[0].replace(' грн', '').split('-').map(Number);
     const avgSalary = (min + max) / 2;
-    
+
     switch(filter) {
         case '0-30000': return avgSalary <= 30000;
         case '30000-50000': return avgSalary > 30000 && avgSalary <= 50000;
@@ -196,7 +196,7 @@ function matchSalaryFilter(jobSalary, filter) {
 function matchExperienceFilter(jobExperience, filter) {
     if (filter === '') return true;
     const years = parseInt(jobExperience);
-    
+
     switch(filter) {
         case '0-1': return years <= 1;
         case '1-3': return years > 1 && years <= 3;
@@ -240,6 +240,7 @@ function showJobDetails(jobId) {
     const responsibilities = document.getElementById('jobResponsibilities');
     const benefits = document.getElementById('jobBenefits');
     const applyBtn = document.getElementById('applyJobBtn');
+    const saveBtn = document.getElementById('saveJobBtn');
 
     title.textContent = job.title;
     company.textContent = job.company;
@@ -253,6 +254,7 @@ function showJobDetails(jobId) {
     benefits.innerHTML = job.benefits.map(benefit => `<li>${benefit}</li>`).join('');
 
     applyBtn.onclick = () => applyForJob(jobId);
+    saveBtn.onclick = () => saveJob(jobId);
 
     modal.style.display = 'block';
 }
@@ -264,6 +266,22 @@ function applyForJob(jobId) {
         document.getElementById('jobDetailsModal').style.display = 'none';
     } else {
         alert('Будь ласка, увійдіть або зареєструйтеся, щоб подати заявку на вакансію.');
+        openLoginModal();
+    }
+}
+
+function saveJob(jobId) {
+    if (isLoggedIn()) {
+        const savedJobs = JSON.parse(localStorage.getItem('savedJobs')) || [];
+        if (!savedJobs.includes(jobId)) {
+            savedJobs.push(jobId);
+            localStorage.setItem('savedJobs', JSON.stringify(savedJobs));
+            alert('Вакансію збережено!');
+        } else {
+            alert('Ця вакансія вже збережена.');
+        }
+    } else {
+        alert('Будь ласка, увійдіть або зареєструйтеся, щоб зберегти вакансію.');
         openLoginModal();
     }
 }
@@ -362,6 +380,18 @@ function openSalaryCalculatorModal() {
     openModal('salaryCalculatorModal');
 }
 
+function openResumeBuilderModal() {
+    openModal('resumeBuilderModal');
+}
+
+function openSkillAssessmentModal() {
+    openModal('skillAssessmentModal');
+}
+
+function openJobAlertModal() {
+    openModal('jobAlertModal');
+}
+
 // Close modals when clicking outside
 window.onclick = function(event) {
     if (event.target.classList.contains('modal')) {
@@ -391,12 +421,12 @@ document.getElementById('registerForm').onsubmit = function(e) {
     const email = document.getElementById('registerEmail').value;
     const password = document.getElementById('registerPassword').value;
     const confirmPassword = document.getElementById('confirmPassword').value;
-    
+
     if (password !== confirmPassword) {
         alert('Паролі не співпадають');
         return;
     }
-    
+
     register(name, email, password);
 }
 
@@ -503,7 +533,7 @@ document.getElementById('salaryCalculatorForm').onsubmit = function(e) {
     // This is a simplified calculation and should be replaced with more accurate data in a real application
     let baseSalary = 30000;
     baseSalary += experience * 5000;
-    
+
     switch(education) {
         case 'bachelor':
             baseSalary *= 1.2;
@@ -537,6 +567,110 @@ function subscribeNewsletter() {
     document.getElementById('newsletterEmail').value = '';
 }
 
+// Resume builder
+document.getElementById('resumeBuilderForm').onsubmit = function(e) {
+    e.preventDefault();
+    const name = document.getElementById('resumeName').value;
+    const email = document.getElementById('resumeEmail').value;
+    const phone = document.getElementById('resumePhone').value;
+    const summary = document.getElementById('resumeSummary').value;
+    const experience = document.getElementById('resumeExperience').value;
+    const education = document.getElementById('resumeEducation').value;
+    const skills = document.getElementById('resumeSkills').value;
+
+    // In a real application, this would generate a formatted resume
+    alert('Резюме успішно створено! Ви можете завантажити його у форматі PDF.');
+}
+
+// Skill assessment
+const skillQuestions = [
+    {
+        question: "Яка мова програмування використовується для створення інтерактивних веб-сторінок?",
+        options: ["HTML", "CSS", "JavaScript", "Python"],
+        correctAnswer: "JavaScript"
+    },
+    {
+        question: "Що означає абревіатура SQL?",
+        options: ["Structured Query Language", "Simple Question Language", "System Quality Language", "Software Query Logic"],
+        correctAnswer: "Structured Query Language"
+    },
+    {
+        question: "Який протокол використовується для безпечної передачі даних через Інтернет?",
+        options: ["HTTP", "FTP", "SMTP", "HTTPS"],
+        correctAnswer: "HTTPS"
+    }
+];
+
+function loadSkillAssessment() {
+    const questionContainer = document.getElementById('questionContainer');
+    questionContainer.innerHTML = '';
+
+    skillQuestions.forEach((q, index) => {
+        const questionElement = document.createElement('div');
+        questionElement.className = 'skill-assessment-question';
+        questionElement.innerHTML = `
+            <p>${index + 1}. ${q.question}</p>
+            <div class="skill-assessment-options">
+                ${q.options.map(option => `
+                    <label>
+                        <input type="radio" name="question${index}" value="${option}">
+                        ${option}
+                    </label>
+                `).join('')}
+            </div>
+        `;
+        questionContainer.appendChild(questionElement);
+    });
+}
+
+document.getElementById('skillAssessmentForm').onsubmit = function(e) {
+    e.preventDefault();
+    let score = 0;
+    skillQuestions.forEach((q, index) => {
+        const selectedAnswer = document.querySelector(`input[name="question${index}"]:checked`);
+        if (selectedAnswer && selectedAnswer.value === q.correctAnswer) {
+            score++;
+        }
+    });
+
+    const percentage = (score / skillQuestions.length) * 100;
+    document.getElementById('skillScore').textContent = `Ви відповіли правильно на ${score} з ${skillQuestions.length} питань (${percentage}%)`;
+    document.getElementById('skillFeedback').textContent = percentage >= 70 ? 
+        "Відмінний результат! Ви маєте гарні знання в цій галузі." : 
+        "Ви можете покращити свої знання. Рекомендуємо додаткове навчання.";
+    document.getElementById('assessmentResult').style.display = 'block';
+}
+
+// Job alert
+document.getElementById('jobAlertForm').onsubmit = function(e) {
+    e.preventDefault();
+    const keywords = document.getElementById('alertKeywords').value;
+    const location = document.getElementById('alertLocation').value;
+    const jobType = document.getElementById('alertJobType').value;
+    const frequency = document.getElementById('alertFrequency').value;
+
+    // In a real application, this would save the alert settings to a database
+    alert(`Сповіщення про вакансії налаштовано:\nКлючові слова: ${keywords}\nМісто: ${location}\nТип роботи: ${jobType}\nЧастота: ${frequency}`);
+    closeModal('jobAlertModal');
+}
+
+// Mobile menu toggle
+document.getElementById('menuToggle').addEventListener('click', function() {
+    const navLinks = document.getElementById('navLinks');
+    navLinks.classList.toggle('active');
+});
+
+// Dark mode toggle
+function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+    localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+}
+
+// Check for saved dark mode preference
+if (localStorage.getItem('darkMode') === 'true') {
+    document.body.classList.add('dark-mode');
+}
+
 // Initial display
 showAllJobs();
 
@@ -555,3 +689,6 @@ setInterval(() => {
     jobs.sort(() => Math.random() - 0.5);
     showAllJobs();
 }, 600000);
+
+// Load skill assessment questions when the modal is opened
+document.getElementById('skillAssessmentModal').addEventListener('show', loadSkillAssessment);
